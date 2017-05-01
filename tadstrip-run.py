@@ -1,4 +1,7 @@
 import EtStrip as TadStrip
 
-TadStrip.main_loop()
-
+try:
+    TadStrip.main_loop()
+finally:
+    TadStrip.strip.clear()
+    TadStrip.strip.show()
