@@ -506,8 +506,6 @@ strip.setBrightness(64)  # Limit brightness to ~1/4 duty cycle
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(switch, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-main_loop()
-
 
 # pew = Pew(0xFFFFFF)
 # loop(pew.tick, 0.05, 0.05)
