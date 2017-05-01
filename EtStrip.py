@@ -4,10 +4,12 @@ import datetime
 import random
 import colorsys
 from dotstar import Adafruit_DotStar
+import RPi.GPIO as GPIO
 
 length = 120
 data = 23
 clock = 24
+switch = 26
 TRANSPARENT = 0xFFFFFFFF
 BLACK = 0
 interrupt = False
@@ -261,11 +263,12 @@ class MorphPew(Anim):
 
 
 class Executor:
-    def __init__(self, refresh):
+    def __init__(self, refresh, override_func=lambda: GPIO.input(switch)): #  TODO Modularize
         self.layers = []
         self.offsets = {}
         self.refresh = refresh
         self.out_buffer = {}
+        self.override_func = override_func
 
     def tick(self, set_color_func=set_color):
         for layer in self.layers:
@@ -280,7 +283,7 @@ class Executor:
 
     def show(self, set_color_func, clear_buffer=True):
         for i in range(length):
-            if self.out_buffer.has_key(i):
+            if self.out_buffer.has_key(i) and self.override_func():
                 set_color_func(i, self.out_buffer.get(i))
             else:
                 set_color_func(i, 0x000000)
@@ -500,6 +503,8 @@ def main_loop():
 time.sleep(5)# Reboot shenanigans
 strip.begin()
 strip.setBrightness(64)  # Limit brightness to ~1/4 duty cycle
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(switch, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 main_loop()
 
