@@ -216,9 +216,10 @@ class ColorWalk(Anim):
     def __init__(self, duration=4, strength=1, start=0, width=length):
         super(ColorWalk, self).__init__(duration, width)
         self.strength = strength
-        self.buffer=[start]
+        self.buffer = [start]
 
     def tick(self, set_color_func, frame_length=0.01666):
+        # TODO Duration not used
         for i in range(self.width):
             if i < self.buffer.__len__():
                 set_color_func(i, hsv(self.buffer[i], 1.0, 1.0))
@@ -263,7 +264,7 @@ class MorphPew(Anim):
 
 
 class Executor:
-    def __init__(self, refresh, override_func=lambda: GPIO.input(switch)): #  TODO Modularize
+    def __init__(self, refresh, override_func=lambda: False):
         self.layers = []
         self.offsets = {}
         self.refresh = refresh
@@ -283,7 +284,7 @@ class Executor:
 
     def show(self, set_color_func, clear_buffer=True):
         for i in range(length):
-            if self.out_buffer.has_key(i) and self.override_func():
+            if i in self.out_buffer and self.override_func():
                 set_color_func(i, self.out_buffer.get(i))
             else:
                 set_color_func(i, 0x000000)

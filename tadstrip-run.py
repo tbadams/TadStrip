@@ -1,4 +1,4 @@
-import EtStrip as TadStrip
+import TadStrip as TadStrip
 
 try:
     TadStrip.main_loop()
